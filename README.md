@@ -1,6 +1,5 @@
 # Breaking the Sorting Barrier for Single-Source Shortest Paths (Dijkstra 2.0)
 
-Based on research by [Duan et. al](https://arxiv.org/pdf/2504.17033)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 Implementation of "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths" by Duan et al. (2025) - the first deterministic algorithm to achieve O(m log^(2/3) n) time complexity for SSSP, breaking Dijkstra's O(m + n log n) bound on sparse graphs.
