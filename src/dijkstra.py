@@ -48,5 +48,52 @@ def dijkstra(g: Graph, source: int) -> Tuple[List[float], List[Optional[int]]]:
                 heapq.heappush(pq, (new_dist, v))
 
     return distances, predecessors
+def verify_shortest_paths(g: Graph, source: int,
+                          distances: List[float],
+                          predecessors: List[Optional[int]]) -> bool:
+    """Verify correctness of shortest path solution.
 
+    Args:
+        g: Input graph
+        source: Source vertex
+        distances: Computed distances
+        predecessors: Computed predecessors
 
+    Returns:
+        True if solution is correct, False otherwise
+    """
+    n = g.n
+
+    # Check source
+    if distances[source] != 0.0:
+        return False
+
+    # Check triangle inequality for all edges
+    for u in range(n):
+        for v, weight in g.neighbors(u):
+            if distances[u] + weight < distances[v] - 1e-9:  # Small epsilon for float comparison
+                return False
+
+    # Check predecessor paths
+    for v in range(n):
+        if distances[v] == float('inf'):
+            if predecessors[v] is not None:
+                return False
+        elif v != source:
+            pred = predecessors[v]
+            if pred is None:
+                return False
+
+            # Check if edge (pred, v) exists with correct weight
+            found = False
+            for neighbor, weight in g.neighbors(pred):
+                if neighbor == v:
+                    expected_dist = distances[pred] + weight
+                    if abs(distances[v] - expected_dist) < 1e-9:
+                        found = True
+                        break
+
+            if not found:
+                return False
+
+    return True
