@@ -1,6 +1,8 @@
 # Breaking the Sorting Barrier for Single-Source Shortest Paths (Dijkstra 2.0)
 
-[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=fff)](#)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Implementation of "Breaking the Sorting Barrier for Directed Single-Source Shortest Paths" by Duan et al. (2025) - the first deterministic algorithm to achieve O(m log^(2/3) n) time complexity for SSSP, breaking Dijkstra's O(m + n log n) bound on sparse graphs. This algorithm is the first to prove that Dijkstra's algorithm is not optimal for single-source shortest paths on directed graphs with real non-negative edge weights.
 The method combines two classical approaches:
@@ -11,11 +13,11 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
 
 ### Time Complexity
 
-| Algorithm                 | Time Complexity | Graph Type |
-|---------------------------|----------------|------------|
-| Dijkstra (Fibonacci Heap) | O(m + n log n) | Directed, non-negative weights |
-| **Duan et. al**            | **O(m log^(2/3) n)** | Directed, non-negative weights |
-| Improvement               | **Faster on sparse graphs** where m = o(n log^(1/3) n) | - |
+| Algorithm                 | Time Complexity                                        | Graph Type                     |
+|---------------------------|--------------------------------------------------------|--------------------------------|
+| Dijkstra (Fibonacci Heap) | O(m + n log n)                                         | Directed, non-negative weights |
+| **Duan et. al**           | **O(m log^(2/3) n)**                                   | Directed, non-negative weights |
+| Improvement               | **Faster on sparse graphs** where m = o(n log^(1/3) n) | -                              |
 
 ## Repository Structure
 
