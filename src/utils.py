@@ -135,3 +135,22 @@ def compute_reachability(g: Graph, source: int) -> Set[int]:
 
     return reachable
 
+def compare_distances(distances1: List[float], distances2: List[float],
+    if len(distances1) != len(distances2):
+        return False
+
+    for d1, d2 in zip(distances1, distances2):
+        # Both infinite
+        if d1 == float('inf') and d2 == float('inf'):
+            continue
+
+        # One infinite, one finite
+        if d1 == float('inf') or d2 == float('inf'):
+            return False
+
+        # Both finite but different
+        if abs(d1 - d2) > epsilon:
+            return False
+
+    return True
+
