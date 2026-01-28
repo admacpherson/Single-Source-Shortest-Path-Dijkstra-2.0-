@@ -168,3 +168,13 @@ def theoretical_complexity(n: int, m: int, algorithm: str) -> float:
     else:
         raise ValueError(f"Unknown algorithm: {algorithm}")
 
+
+def theoretical_speedup(n: int, m: int) -> float:
+    dijkstra_ops = theoretical_complexity(n, m, 'dijkstra')
+    duan_ops = theoretical_complexity(n, m, 'duan')
+
+    if duan_ops == 0:
+        return float('inf')
+
+    return dijkstra_ops / duan_ops
+
