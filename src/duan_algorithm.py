@@ -6,6 +6,7 @@ by Duan, Mao, Mao, Shu, and Yin (2025)
 Time complexity: O(m log^(2/3) n)
 """
 
+import math
 import heapq
 from typing import List, Tuple, Optional, Set, Dict
 from .graph import Graph
@@ -207,4 +208,91 @@ def base_case_bmssp(g: Graph, B: float, x: int,
         B_prime = max(db[v] for v in U)
         U_filtered = {v for v in U if db[v] < B_prime}
         return B_prime, U_filtered
+
+
+def bmssp(g: Graph, level: int, B: float, S: Set[int],
+          db: List[float], k: int, t: int) -> Tuple[float, Set[int]]:
+    """Bounded Multi-Source Shortest Path (Algorithm 3)
+
+    Args:
+        g: Input graph
+        level: Recursion level l
+        B: Upper bound
+        S: Frontier set (|S| <= 2^(lt))
+        db: Current distance estimates (modified in place)
+        k: Parameter floor(log^(1/3)(n))
+        t: Parameter floor(log^(2/3)(n))
+
+    Returns:
+        (B', U) where B' is boundary and U is set of complete vertices
+    """
+    # Lines 2-3: Base case l = 0
+    if level == 0:
+        # S must be singleton {x}
+        x = next(iter(S))
+        return base_case_bmssp(g, B, x, db, k)
+
+    # Line 4: P, W <- FindPivots(B, S)
+    P, W = find_pivots(g, B, S, db, k)
+
+    # Line 5: D.Initialize(M, B) with M = 2^((l-1)t)
+    M = 2 ** ((level - 1) * t)
+    D = PartialSortDS(M, B)
+
+    # Line 6: D.Insert(<x, db[x]>) for x in P
+    for x in P:
+        D.insert(x, db[x])
+
+    # Line 7: i <- 0; B'_0 <- min_{x in P} db[x]; U <- empty set
+    i = 0
+    B_prime_prev = min((db[x] for x in P), default=B)
+    U = set()
+
+    # Lines 8-21: Main while loop
+    while len(U) < k * (2 ** (level * t)) and not D.is_empty():
+        # Line 9: i <- i + 1
+        i += 1
+
+        # Line 10: B_i, S_i <- D.Pull()
+        B_i, S_i = D.pull()
+
+        # Line 11: B'_i, U_i <- BMSSP(l-1, B_i, S_i)
+        B_prime_i, U_i = bmssp(g, level - 1, B_i, S_i, db, k, t)
+
+        # Line 12: U <- U ∪ U_i
+        U = U.union(U_i)
+
+        # Line 13: K <- empty set
+        K = []
+
+        # Line 14: For each edge e = (u,v) where u in U_i
+        for u in U_i:
+            for v, w_uv in g.neighbors(u):
+                new_dist = db[u] + w_uv
+
+                # Line 15: if db[u] + w_uv <= db[v]
+                if new_dist <= db[v]:
+                    # Line 16: db[v] <- db[u] + w_uv
+                    db[v] = new_dist
+
+                    # Line 17: if db[u] + w_uv in [B_i, B)
+                    if B_i <= new_dist < B:
+                        # Line 18: D.Insert(<v, db[u] + w_uv>)
+                        D.insert(v, new_dist)
+                    # Line 19: else if db[u] + w_uv in [B'_i, B_i)
+                    elif B_prime_i <= new_dist < B_i:
+                        # Line 20: K <- K ∪ {<v, db[u] + w_uv>}
+                        K.append((v, new_dist))
+
+        # Line 21: D.BatchPrepend(K ∪ {<x, db[x]> : x in S_i and db[x] in [B'_i, B_i)})
+        batch_items = K + [(x, db[x]) for x in S_i if B_prime_i <= db[x] < B_i]
+        D.batch_prepend(batch_items)
+
+        B_prime_prev = B_prime_i
+
+    # Line 22: return B' <- min{B'_i, B}; U <- U ∪ {x in W : db[x] < B'}
+    B_prime = min(B_prime_prev, B)
+    U = U.union({x for x in W if db[x] < B_prime})
+
+    return B_prime, U
 
