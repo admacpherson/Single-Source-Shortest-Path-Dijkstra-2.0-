@@ -70,3 +70,83 @@ class PartialSortDS:
         """Check if data structure is empty."""
         return len(self.items) == 0
 
+
+def find_pivots(g: Graph, B: float, S: Set[int],
+                db: List[float], k: int) -> Tuple[Set[int], Set[int]]:
+    """FindPivots procedure from Algorithm 1
+
+    Args:
+        g: Input graph
+        B: Upper bound
+        S: Set of vertices
+        db: Current distance estimates (modified in place)
+        k: Parameter (floor(log^(1/3)(n)))
+
+    Returns:
+        (P, W) where P is set of pivots and W is set of vertices visited
+    """
+    W = set(S)
+    W_i = set(S)  # W_0 in the paper
+
+    # Relax for k steps (lines 4-11)
+    for i in range(1, k + 1):
+        W_next = set()
+
+        # For all edges (u,v) with u in W_{i-1}
+        for u in W_i:
+            for v, w_uv in g.neighbors(u):
+                new_dist = db[u] + w_uv
+
+                # Line 7: if db[u] + w_uv <= db[v]
+                if new_dist <= db[v]:
+                    # Line 8: db[v] <- db[u] + w_uv
+                    db[v] = new_dist
+
+                    # Lines 9-10: if db[u] + w_uv < B then
+                    if new_dist < B:
+                        W_next.add(v)
+                        W.add(v)
+
+        # Line 12-14: Early termination if W becomes too large
+        if len(W) > k * len(S):
+            P = S
+            return P, W
+
+        W_i = W_next
+
+    # Lines 15-16: Build forest F
+    # F = {(u,v) in E : u,v in W, db[v] = db[u] + w_uv}
+    # Under Assumption 2.1, F is a directed forest
+    parent = {}
+    for v in W:
+        parent[v] = None
+
+    for u in W:
+        for v, w_uv in g.neighbors(u):
+            if v in W and abs(db[v] - (db[u] + w_uv)) < 1e-9:
+                parent[v] = u
+
+    # Compute subtree sizes
+    def get_subtree_size(v: int, visited: Set[int]) -> int:
+        """Count vertices in subtree rooted at v."""
+        if v in visited:
+            return 0
+        visited.add(v)
+
+        size = 1
+        for u in W:
+            if parent.get(u) == v:
+                size += get_subtree_size(u, visited)
+        return size
+
+    # Line 16: P = {u in S : u is root of tree with >= k vertices in F}
+    P = set()
+    for u in S:
+        if u in W:
+            visited = set()
+            size = get_subtree_size(u, visited)
+            if size >= k:
+                P.add(u)
+
+    return P, W
+
