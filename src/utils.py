@@ -109,3 +109,29 @@ def print_path(path: List[int], distances: List[float] = None):
     else:
         print()
 
+
+def compute_reachability(g: Graph, source: int) -> Set[int]:
+    """Compute set of vertices reachable from source using BFS.
+
+    Args:
+        g: Graph
+        source: Source vertex
+
+    Returns:
+        Set of reachable vertices
+    """
+    reachable = {source}
+    queue = [source]
+    front = 0
+
+    while front < len(queue):
+        u = queue[front]
+        front += 1
+
+        for v, _ in g.neighbors(u):
+            if v not in reachable:
+                reachable.add(v)
+                queue.append(v)
+
+    return reachable
+
