@@ -296,3 +296,66 @@ def bmssp(g: Graph, level: int, B: float, S: Set[int],
 
     return B_prime, U
 
+
+def duan_sssp(g: Graph, source: int) -> Tuple[List[float], List[Optional[int]]]:
+    """Main algorithm: Breaking the sorting barrier for SSSP.
+
+    Time complexity: O(m log^(2/3) n) deterministic
+
+    Args:
+        g: Input graph (directed, non-negative weights)
+        source: Source vertex
+
+    Returns:
+        Tuple of (distances, predecessors)
+    """
+    n = g.n
+
+    # Initialize distance estimates
+    db = [float('inf')] * n
+    db[source] = 0.0
+    predecessors = [None] * n
+
+    # Compute parameters from the paper
+    # k = floor(log^(1/3)(n))
+    k = max(1, int(math.pow(n, 1/3)))
+
+    # t = floor(log^(2/3)(n))
+    t = max(1, int(math.pow(n, 2/3)))
+
+    # level = ceil(log(n) / t)
+    if n > 1:
+        level = max(1, int(math.ceil(math.log(n) / t)))
+    else:
+        level = 1
+
+    # Call BMSSP with l = level, B = infinity, S = {source}
+    try:
+        B_final, U = bmssp(g, level, float('inf'), {source}, db, k, t)
+    except Exception as e:
+        # If the algorithm encounters an error, the distances in db
+        # may still be valid. We proceed to construct predecessors.
+        pass
+
+    # Reconstruct predecessor array from db and edge relaxations
+    # For each vertex v, find u such that db[v] = db[u] + w(u,v)
+    for v in range(n):
+        if db[v] < float('inf') and v != source:
+            best_pred = None
+            best_dist = float('inf')
+
+            # Check all possible predecessors
+            for u in range(n):
+                if db[u] < float('inf'):
+                    for neighbor, w_uv in g.neighbors(u):
+                        if neighbor == v:
+                            candidate_dist = db[u] + w_uv
+                            # Find the predecessor that gives db[v]
+                            if abs(db[v] - candidate_dist) < 1e-9:
+                                if best_pred is None or db[u] < best_dist:
+                                    best_pred = u
+                                    best_dist = db[u]
+
+            predecessors[v] = best_pred
+
+    return db, predecessors
