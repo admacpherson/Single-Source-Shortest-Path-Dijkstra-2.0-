@@ -135,6 +135,64 @@ def compute_reachability(g: Graph, source: int) -> Set[int]:
 
     return reachable
 
+
+def graph_statistics(g: Graph) -> Dict:
+    n, m = g.n, g.m
+
+    # Compute degree statistics
+    out_degrees = [len(g.neighbors(v)) for v in range(n)]
+    in_degrees = [0] * n
+
+    for u in range(n):
+        for v, _ in g.neighbors(u):
+            in_degrees[v] += 1
+
+    # Edge weight statistics
+    weights = []
+    for u in range(n):
+        for _, w in g.neighbors(u):
+            weights.append(w)
+
+    stats = {
+        'vertices': n,
+        'edges': m,
+        'density': m / n if n > 0 else 0,
+        'avg_out_degree': sum(out_degrees) / n if n > 0 else 0,
+        'max_out_degree': max(out_degrees) if out_degrees else 0,
+        'min_out_degree': min(out_degrees) if out_degrees else 0,
+        'avg_in_degree': sum(in_degrees) / n if n > 0 else 0,
+        'max_in_degree': max(in_degrees) if in_degrees else 0,
+        'min_in_degree': min(in_degrees) if in_degrees else 0,
+    }
+
+    if weights:
+        stats['avg_weight'] = sum(weights) / len(weights)
+        stats['max_weight'] = max(weights)
+        stats['min_weight'] = min(weights)
+
+    return stats
+
+
+def print_graph_statistics(g: Graph):
+    stats = graph_statistics(g)
+
+    print("Graph Statistics:")
+    print(f"  Vertices (n):        {stats['vertices']:>10,}")
+    print(f"  Edges (m):           {stats['edges']:>10,}")
+    print(f"  Density (m/n):       {stats['density']:>10.2f}")
+    print(f"  Avg out-degree:      {stats['avg_out_degree']:>10.2f}")
+    print(f"  Max out-degree:      {stats['max_out_degree']:>10}")
+    print(f"  Min out-degree:      {stats['min_out_degree']:>10}")
+    print(f"  Avg in-degree:       {stats['avg_in_degree']:>10.2f}")
+    print(f"  Max in-degree:       {stats['max_in_degree']:>10}")
+    print(f"  Min in-degree:       {stats['min_in_degree']:>10}")
+
+    if 'avg_weight' in stats:
+        print(f"  Avg edge weight:     {stats['avg_weight']:>10.2f}")
+        print(f"  Max edge weight:     {stats['max_weight']:>10.2f}")
+        print(f"  Min edge weight:     {stats['min_weight']:>10.2f}")
+
+
 def compare_distances(distances1: List[float], distances2: List[float],
     if len(distances1) != len(distances2):
         return False
