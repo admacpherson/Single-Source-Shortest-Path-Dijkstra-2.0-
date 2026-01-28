@@ -178,3 +178,49 @@ def theoretical_speedup(n: int, m: int) -> float:
 
     return dijkstra_ops / duan_ops
 
+
+def format_distance(distance: float, decimals: int = 2) -> str:
+    """Format a distance for display.
+
+    Args:
+        distance: Distance value
+        decimals: Number of decimal places
+
+    Returns:
+        Formatted string
+    """
+    if distance == float('inf'):
+        return "∞"
+    return f"{distance:.{decimals}f}"
+
+
+def print_distance_table(distances: List[float], source: int,
+                         vertices_per_row: int = 10):
+    """Print distances in a formatted table.
+
+    Args:
+        distances: Distance array
+        source: Source vertex
+        vertices_per_row: Number of vertices to show per row
+    """
+    n = len(distances)
+
+    print(f"Shortest distances from vertex {source}:")
+    print("-" * 50)
+
+    for start in range(0, n, vertices_per_row):
+        end = min(start + vertices_per_row, n)
+
+        # Print vertex numbers
+        print("  v: ", end="")
+        for v in range(start, end):
+            print(f"{v:>8}", end="")
+        print()
+
+        # Print distances
+        print("  d: ", end="")
+        for v in range(start, end):
+            print(f"{format_distance(distances[v], 2):>8}", end="")
+        print()
+        print()
+
