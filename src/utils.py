@@ -154,3 +154,17 @@ def compare_distances(distances1: List[float], distances2: List[float],
 
     return True
 
+def theoretical_complexity(n: int, m: int, algorithm: str) -> float:
+    if algorithm.lower() == 'dijkstra':
+        # O(m + n log n) with Fibonacci heap
+        return m + n * math.log2(n) if n > 0 else 0
+
+    elif algorithm.lower() == 'duan':
+        # O(m log^(2/3) n)
+        if n <= 1:
+            return m
+        return m * math.pow(math.log2(n), 2 / 3)
+
+    else:
+        raise ValueError(f"Unknown algorithm: {algorithm}")
+
