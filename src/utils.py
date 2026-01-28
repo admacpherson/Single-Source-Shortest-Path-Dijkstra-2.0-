@@ -38,3 +38,34 @@ def reconstruct_path(predecessors: List[Optional[int]], source: int, target: int
 
     return path
 
+
+def compute_path_length(g: Graph, path: List[int]) -> float:
+    """Compute total length of a path.
+
+    Args:
+        g: Graph
+        path: List of vertices forming a path
+
+    Returns:
+        Total weight of path, or inf if path is invalid
+    """
+    if len(path) <= 1:
+        return 0.0
+
+    total = 0.0
+    for i in range(len(path) - 1):
+        u, v = path[i], path[i + 1]
+
+        # Find edge weight
+        found = False
+        for neighbor, weight in g.neighbors(u):
+            if neighbor == v:
+                total += weight
+                found = True
+                break
+
+        if not found:
+            return float('inf')  # Edge doesn't exist
+
+    return total
+
