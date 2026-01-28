@@ -69,3 +69,18 @@ def compute_path_length(g: Graph, path: List[int]) -> float:
 
     return total
 
+
+def verify_path(g: Graph, path: List[int], expected_distance: float) -> bool:
+    """Verify that a path has the expected distance.
+
+    Args:
+        g: Graph
+        path: List of vertices
+        expected_distance: Expected total distance
+
+    Returns:
+        True if path distance matches expected distance
+    """
+    actual_distance = compute_path_length(g, path)
+    return abs(actual_distance - expected_distance) < 1e-9
+
