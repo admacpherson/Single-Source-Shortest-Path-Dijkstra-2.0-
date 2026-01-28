@@ -6,6 +6,7 @@ by Duan, Mao, Mao, Shu, and Yin (2025)
 Time complexity: O(m log^(2/3) n)
 """
 
+import heapq
 from typing import List, Tuple, Optional, Set, Dict
 from .graph import Graph
 
@@ -149,4 +150,61 @@ def find_pivots(g: Graph, B: float, S: Set[int],
                 P.add(u)
 
     return P, W
+
+
+def base_case_bmssp(g: Graph, B: float, x: int,
+                    db: List[float], k: int) -> Tuple[float, Set[int]]:
+    """BaseCase procedure from Algorithm 2 (l=0 case of BMSSP).
+
+    Args:
+        g: Input graph
+        B: Upper bound
+        x: Source vertex (S is singleton {x})
+        db: Current distance estimates (modified in place)
+        k: Parameter
+
+    Returns:
+        (B', U) where B' is boundary and U is set of complete vertices
+    """
+    # Line 2: U_0 <- S = {x}
+    U = {x}
+
+    # Line 3: Initialize heap with single element
+    H = [(db[x], x)]
+    visited = set()
+
+    # Lines 4-13: While loop
+    while H and len(U) < k + 1:
+        # Line 5: Extract minimum
+        dist_u, u = heapq.heappop(H)
+
+        if u in visited:
+            continue
+        visited.add(u)
+
+        # Line 6: U_0 <- U_0 ∪ {u}
+        U.add(u)
+
+        # Line 7: For each edge e = (u,v)
+        for v, w_uv in g.neighbors(u):
+            new_dist = db[u] + w_uv
+
+            # Line 8: if db[u] + w_uv <= db[v] and db[u] + w_uv < B
+            if new_dist <= db[v] and new_dist < B:
+                # Line 9: db[v] <- db[u] + w_uv
+                db[v] = new_dist
+
+                # Lines 10-13: Update heap
+                if v not in visited:
+                    heapq.heappush(H, (db[v], v))
+
+    # Lines 14-17: Return based on size of U
+    if len(U) <= k:
+        # Line 15: return B' <- B, U <- U_0
+        return B, U
+    else:
+        # Line 17: return B' <- max_{v in U_0} db[v], U <- {v in U_0 : db[v] < B'}
+        B_prime = max(db[v] for v in U)
+        U_filtered = {v for v in U if db[v] < B_prime}
+        return B_prime, U_filtered
 
