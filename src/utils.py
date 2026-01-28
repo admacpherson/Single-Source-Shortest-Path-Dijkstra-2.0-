@@ -224,3 +224,50 @@ def print_distance_table(distances: List[float], source: int,
         print()
         print()
 
+
+def analyze_path_tree(g: Graph, predecessors: List[Optional[int]],
+                      source: int) -> Dict:
+    """Analyze the shortest path tree.
+
+    Args:
+        g: Graph
+        predecessors: Predecessor array
+        source: Source vertex
+
+    Returns:
+        Dictionary with tree statistics
+    """
+    n = g.n
+
+    # Compute tree depth for each vertex
+    depths = [-1] * n
+    depths[source] = 0
+
+    # BFS to compute depths
+    changed = True
+    while changed:
+        changed = False
+        for v in range(n):
+            if predecessors[v] is not None and depths[v] == -1:
+                pred = predecessors[v]
+                if depths[pred] >= 0:
+                    depths[v] = depths[pred] + 1
+                    changed = True
+
+    # Count children for each vertex
+    children_count = [0] * n
+    for v in range(n):
+        if predecessors[v] is not None:
+            children_count[predecessors[v]] += 1
+
+    reachable = sum(1 for d in depths if d >= 0)
+    max_depth = max(d for d in depths if d >= 0) if reachable > 0 else 0
+    avg_depth = sum(d for d in depths if d >= 0) / reachable if reachable > 0 else 0
+
+    return {
+        'reachable_vertices': reachable,
+        'max_depth': max_depth,
+        'avg_depth': avg_depth,
+        'max_children': max(children_count),
+        'avg_children': sum(children_count) / n if n > 0 else 0
+    }
