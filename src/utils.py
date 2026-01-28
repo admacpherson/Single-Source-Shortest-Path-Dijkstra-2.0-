@@ -84,3 +84,28 @@ def verify_path(g: Graph, path: List[int], expected_distance: float) -> bool:
     actual_distance = compute_path_length(g, path)
     return abs(actual_distance - expected_distance) < 1e-9
 
+
+def print_path(path: List[int], distances: List[float] = None):
+    """Pretty print a path.
+
+    Args:
+        path: List of vertices in path
+        distances: Optional distances array to show cumulative distances
+    """
+    if not path:
+        print("No path exists")
+        return
+
+    print("Path: ", end="")
+    for i, v in enumerate(path):
+        print(v, end="")
+        if distances is not None and i < len(path) - 1:
+            print(f" [{distances[v]:.2f}] -> ", end="")
+        elif i < len(path) - 1:
+            print(" -> ", end="")
+
+    if distances is not None:
+        print(f" [{distances[path[-1]]:.2f}]")
+    else:
+        print()
+
