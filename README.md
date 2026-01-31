@@ -37,10 +37,13 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
 │   ├── test_graphs.py        # Graph generation utilities
 │   ├── test_performance.py   # Runtime comparison
 │   └── test_utils.py         # Utility function tests
-
 ├── benchmarks/
 │   ├── run_benchmarks.py     # Performance benchmarking script
-│   └── visualize_results.py  # Results visualization
+│   ├── visualize_results.py  # Results visualization
+│   └── graphs/               # Visualization outputs
+│     ├── density_analysis.png
+│     ├── runtime_comparison.png
+│     └── theoretical_comparison
 └── examples/
     ├── demo.py               # Basic usage examples
     └── advanced_demo.py      # Advanced features demonstration
