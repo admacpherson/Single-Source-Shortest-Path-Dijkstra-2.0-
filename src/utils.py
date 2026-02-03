@@ -137,6 +137,14 @@ def compute_reachability(g: Graph, source: int) -> Set[int]:
 
 
 def graph_statistics(g: Graph) -> Dict:
+    """Compute various statistics about a graph.
+
+    Args:
+        g: Graph
+
+    Returns:
+        Dictionary with statistics
+    """
     n, m = g.n, g.m
 
     # Compute degree statistics
@@ -174,6 +182,11 @@ def graph_statistics(g: Graph) -> Dict:
 
 
 def print_graph_statistics(g: Graph):
+    """Print formatted graph statistics.
+
+    Args:
+        g: Graph
+    """
     stats = graph_statistics(g)
 
     print("Graph Statistics:")
@@ -194,6 +207,17 @@ def print_graph_statistics(g: Graph):
 
 
 def compare_distances(distances1: List[float], distances2: List[float],
+                      epsilon: float = 1e-9) -> bool:
+    """Compare two distance arrays for equality.
+
+    Args:
+        distances1: First distance array
+        distances2: Second distance array
+        epsilon: Tolerance for floating point comparison
+
+    Returns:
+        True if distances match within epsilon
+    """
     if len(distances1) != len(distances2):
         return False
 
@@ -212,7 +236,18 @@ def compare_distances(distances1: List[float], distances2: List[float],
 
     return True
 
+
 def theoretical_complexity(n: int, m: int, algorithm: str) -> float:
+    """Compute theoretical operation count for an algorithm.
+
+    Args:
+        n: Number of vertices
+        m: Number of edges
+        algorithm: 'dijkstra' or 'duan'
+
+    Returns:
+        Theoretical operation count (not exact runtime)
+    """
     if algorithm.lower() == 'dijkstra':
         # O(m + n log n) with Fibonacci heap
         return m + n * math.log2(n) if n > 0 else 0
@@ -228,6 +263,15 @@ def theoretical_complexity(n: int, m: int, algorithm: str) -> float:
 
 
 def theoretical_speedup(n: int, m: int) -> float:
+    """Compute theoretical speedup of Duan over Dijkstra.
+
+    Args:
+        n: Number of vertices
+        m: Number of edges
+
+    Returns:
+        Theoretical speedup ratio
+    """
     dijkstra_ops = theoretical_complexity(n, m, 'dijkstra')
     duan_ops = theoretical_complexity(n, m, 'duan')
 
