@@ -1,3 +1,5 @@
+"""Test correctness of SSSP algorithms."""
+
 import pytest
 import sys
 import os
@@ -11,6 +13,7 @@ from src.duan_algorithm import duan_sssp
 
 
 def test_simple_graph():
+    """Test on a simple hand-crafted graph."""
     g = Graph(5, directed=True)
     g.add_edge(0, 1, 4.0)
     g.add_edge(0, 2, 1.0)
@@ -38,6 +41,7 @@ def test_simple_graph():
 
 
 def test_disconnected_graph():
+    """Test on graph with unreachable vertices."""
     g = Graph(6, directed=True)
     g.add_edge(0, 1, 2.0)
     g.add_edge(1, 2, 3.0)
@@ -58,6 +62,7 @@ def test_disconnected_graph():
 
 
 def test_random_graphs():
+    """Test on multiple random graphs."""
     for seed in range(5):
         n = 20
         m = 40
@@ -82,6 +87,7 @@ def test_random_graphs():
 
 
 def test_grid_graph():
+    """Test on grid graph."""
     g = Graph.grid_graph(5, 5, directed=True)
 
     distances_dijk, pred_dijk, _ = dijkstra(g, 0)
@@ -100,6 +106,7 @@ def test_grid_graph():
 
 
 def test_single_vertex():
+    """Test on single vertex graph."""
     g = Graph(1, directed=True)
 
     distances_dijk, _, _ = dijkstra(g, 0)
@@ -110,6 +117,7 @@ def test_single_vertex():
 
 
 def test_two_vertices():
+    """Test on two vertex graph."""
     g = Graph(2, directed=True)
     g.add_edge(0, 1, 5.0)
 
@@ -123,6 +131,7 @@ def test_two_vertices():
 
 
 def test_parallel_edges():
+    """Test graph with multiple edges between same vertices."""
     g = Graph(3, directed=True)
     g.add_edge(0, 1, 10.0)
     g.add_edge(0, 1, 5.0)  # Shorter path
@@ -138,3 +147,7 @@ def test_parallel_edges():
     assert distances_duan[0] == 0.0
     assert abs(distances_duan[1] - 5.0) < 1e-6
     assert abs(distances_duan[2] - 8.0) < 1e-6
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])
