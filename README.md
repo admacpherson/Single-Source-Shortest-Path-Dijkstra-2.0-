@@ -13,11 +13,11 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
 
 ### Time Complexity
 
-| Algorithm                 | Time Complexity                                        | Graph Type                     |
-|---------------------------|--------------------------------------------------------|--------------------------------|
-| Dijkstra (Fibonacci Heap) | O(m + n log n)                                         | Directed, non-negative weights |
-| **Duan et. al**           | **O(m log^(2/3) n)**                                   | Directed, non-negative weights |
-| Improvement               | **Faster on sparse graphs** where m = o(n log^(1/3) n) | -                              |
+| Algorithm             | Time Complexity                                    | Graph Type                     |
+|-----------------------|----------------------------------------------------|--------------------------------|
+| Dijkstra (Fibonacci Heap) | O(m + n log n)                                     | Directed, non-negative weights |
+| Duan et. al           | **O(m log^(2/3) n)**                               | Directed, non-negative weights |
+| Improvement           | Faster on sparse graphs where m = o(n log^(1/3) n) | -                              |
 
 ## Repository Structure
 
@@ -48,6 +48,20 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
     ├── demo.py               # Basic usage examples
     └── advanced_demo.py      # Advanced features demonstration
 ```
+
+## Performance Comparison
+
+The implementation includes comprehensive benchmarks comparing:
+- Classical Dijkstra with Fibonacci heap
+- The new Duan et al. algorithm
+- Various graph densities and sizes
+
+Run benchmarks:
+```bash
+python benchmarks/run_benchmarks.py --max-nodes 10000 --trials 10
+python benchmarks/visualize_results.py
+```
+
 ## References
 
 This implementation is based on the groundbreaking paper by Ran Duan, Jiayi Mao, Xiao Mao, Xinkai Shu, and Longhui Yin from Tsinghua University, Stanford University, and Max Planck Institute for Informatics.
