@@ -1,5 +1,6 @@
 import sys
 import os
+import time
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
@@ -115,5 +116,59 @@ def demo_grid_graph():
     print(f"\nShortest path length from top-left to bottom-right:")
     print(f"  Dijkstra: {distances_dijk[target]:.2f}")
     print(f"  Duan:     {distances_duan[target]:.2f}")
+    print()
+
+
+def demo_random_large():
+    """Demo on a larger random graph."""
+    print("=" * 80)
+    print("DEMO: Random Sparse Graph")
+    print("=" * 80)
+
+    n = 1000
+    m = 4000
+
+    print(f"\nGenerating random graph with n={n}, m={m}...")
+    g = Graph.random_graph(n, m, max_weight=100.0, seed=42)
+
+    print(f"Graph density: m/n = {m / n:.2f}")
+    print(f"Average degree: {2 * m / n:.2f}")
+
+    source = 0
+
+    print("\nRunning Dijkstra's algorithm...")
+    start = time.perf_counter()
+    distances_dijk, _ = dijkstra(g, source)
+    time_dijk = time.perf_counter() - start
+    print(f"  Time: {time_dijk:.6f} seconds")
+
+    print("\nRunning Duan et al. algorithm...")
+    start = time.perf_counter()
+    distances_duan, _ = duan_sssp(g, source)
+    time_duan = time.perf_counter() - start
+    print(f"  Time: {time_duan:.6f} seconds")
+
+    print(f"\nSpeedup: {time_dijk / time_duan:.3f}x")
+
+    # Statistics
+    reachable_dijk = sum(1 for d in distances_dijk if d < float('inf'))
+    reachable_duan = sum(1 for d in distances_duan if d < float('inf'))
+
+    print(f"\nReachable vertices:")
+    print(f"  Dijkstra: {reachable_dijk}/{n}")
+    print(f"  Duan:     {reachable_duan}/{n}")
+
+    # Verify correctness
+    max_diff = 0
+    for i in range(n):
+        if distances_dijk[i] < float('inf'):
+            diff = abs(distances_dijk[i] - distances_duan[i])
+            max_diff = max(max_diff, diff)
+
+    print(f"\nMax difference in distances: {max_diff:.10f}")
+    if max_diff < 1e-6:
+        print("✓ Results match!")
+    else:
+        print("❌ Results differ!")
     print()
 
