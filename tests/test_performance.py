@@ -124,3 +124,7 @@ def test_operation_counts():
     print("="*80)
 
 
+if __name__ == "__main__":
+    test_performance_comparison()
+    test_sparse_vs_dense()
+    test_operation_counts()
