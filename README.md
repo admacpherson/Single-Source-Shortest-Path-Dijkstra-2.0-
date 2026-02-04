@@ -49,6 +49,17 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
     └── advanced_demo.py      # Advanced features demonstration
 ```
 
+
+## Running Tests
+
+```bash
+# Run all tests
+python -m pytest tests/
+
+# Run specific test suite
+python -m pytest tests/test_correctness.py -v
+```
+
 ## Performance Comparison
 
 The implementation includes comprehensive benchmarks comparing:
