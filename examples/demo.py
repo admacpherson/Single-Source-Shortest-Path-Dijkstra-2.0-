@@ -76,3 +76,44 @@ def demo_simple_graph():
     print()
 
 
+def demo_grid_graph():
+    print("=" * 80)
+    print("DEMO: Grid Graph (5x5)")
+    print("=" * 80)
+
+    g = Graph.grid_graph(5, 5, directed=True)
+    source = 0  # Top-left corner
+
+    print(f"\nGrid: 5 rows × 5 columns = 25 vertices")
+    print(f"Source: vertex {source} (top-left corner)")
+    print(f"Edges: Right and Down from each vertex with random weights")
+
+    # Run both algorithms
+    print("\nRunning Dijkstra...")
+    distances_dijk, _ = dijkstra(g, source)
+
+    print("Running Duan et al. algorithm...")
+    distances_duan, _ = duan_sssp(g, source)
+
+    # Display as grid
+    print("\nShortest distances (Dijkstra):")
+    for row in range(5):
+        for col in range(5):
+            v = row * 5 + col
+            print(f"{distances_dijk[v]:>7.2f}", end=" ")
+        print()
+
+    print("\nShortest distances (Duan):")
+    for row in range(5):
+        for col in range(5):
+            v = row * 5 + col
+            print(f"{distances_duan[v]:>7.2f}", end=" ")
+        print()
+
+    # Check bottom-right corner
+    target = 24  # Bottom-right
+    print(f"\nShortest path length from top-left to bottom-right:")
+    print(f"  Dijkstra: {distances_dijk[target]:.2f}")
+    print(f"  Duan:     {distances_duan[target]:.2f}")
+    print()
+
