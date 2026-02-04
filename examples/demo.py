@@ -1,3 +1,5 @@
+"""Demo script showing usage of both algorithms."""
+
 import sys
 import os
 import time
@@ -10,6 +12,7 @@ from src.duan_algorithm import duan_sssp
 
 
 def demo_simple_graph():
+    """Demo on a simple example graph."""
     print("=" * 80)
     print("DEMO: Simple Graph Example")
     print("=" * 80)
@@ -78,6 +81,7 @@ def demo_simple_graph():
 
 
 def demo_grid_graph():
+    """Demo on a grid graph."""
     print("=" * 80)
     print("DEMO: Grid Graph (5x5)")
     print("=" * 80)
