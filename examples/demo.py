@@ -172,3 +172,17 @@ def demo_random_large():
         print("❌ Results differ!")
     print()
 
+
+def main():
+    """Run all demos."""
+    demo_simple_graph()
+    demo_grid_graph()
+    demo_random_large()
+
+    print("=" * 80)
+    print("Demos complete!")
+    print("=" * 80)
+
+
+if __name__ == "__main__":
+    main()
