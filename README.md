@@ -73,6 +73,35 @@ python benchmarks/run_benchmarks.py --max-nodes 10000 --trials 10
 python benchmarks/visualize_results.py
 ```
 
+## Algorithm Details
+
+### Key Components
+
+1. **FindPivots**: Identifies critical vertices (pivots) that root large shortest path trees
+   - Runs k Bellman-Ford relaxation steps
+   - Reduces frontier size to |U|/k where k = ⌊log^(1/3)(n)⌋
+
+2. **BMSSP (Bounded Multi-Source Shortest Path)**: Core recursive procedure
+   - Divides problem into ~2^t pieces (t = ⌊log^(2/3)(n)⌋)
+   - Uses partial sorting data structure
+   - Achieves O(log n / log^Ω(1)(n)) time per vertex
+
+3. **Partial Sorting Data Structure**: Enables efficient frontier management
+   - Block-based linked list with O(max{1, log(N/M)}) insertion
+   - Batch prepend operation for efficiency
+   - Pull operation returns smallest M values
+
+### Theoretical Guarantees
+
+- **Correctness**: Deterministic, always returns correct shortest paths
+- **Comparison-Addition Model**: Only uses comparison and addition on edge weights
+
+### When to Use This Algorithm
+
+The new algorithm is faster than Dijkstra when:
+- Graph is sparse: m = o(n log^(1/3) n)
+- Vertices: n ≥ 1000 (overhead for small graphs)
+
 ## References
 
 This implementation is based on the groundbreaking paper by Ran Duan, Jiayi Mao, Xiao Mao, Xinkai Shu, and Longhui Yin from Tsinghua University, Stanford University, and Max Planck Institute for Informatics.
