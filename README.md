@@ -50,6 +50,39 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
 ```
 
 
+### Basic Usage
+For quick examples of how to use both algorithms, see the demo script:
+
+```bash
+# Basic usage examples
+python examples/demo.py
+```
+
+or run the following as a quick example:
+
+```python
+from src.graph import Graph
+from src.dijkstra import dijkstra
+from src.duan_algorithm import duan_sssp
+
+# Create a graph
+g = Graph(n=5, directed=True)
+g.add_edge(0, 1, 4.0)
+g.add_edge(0, 2, 1.0)
+g.add_edge(2, 1, 2.0)
+g.add_edge(1, 3, 1.0)
+g.add_edge(2, 3, 5.0)
+g.add_edge(3, 4, 3.0)
+
+# Run Dijkstra's algorithm
+distances_dijk, _, _ = dijkstra(g, source=0)
+print("Dijkstra:", distances_dijk)
+
+# Run Duan et al. algorithm
+distances_duan, _ = duan_sssp(g, source=0)
+print("Duan:", distances_duan)
+```
+
 ## Running Tests
 
 ```bash
