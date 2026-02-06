@@ -49,6 +49,18 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
     └── advanced_demo.py      # Advanced features demonstration
 ```
 
+## Quick Start
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/admacpherson/Single-Source-Shortest-Path-Dijkstra-2.0-
+cd Single-Source-Shortest-Path-Dijkstra-2.0-
+
+# Install dependencies
+pip install -r requirements.txt
+```
 
 ### Basic Usage
 For quick examples of how to use both algorithms, see the demo scripts:
