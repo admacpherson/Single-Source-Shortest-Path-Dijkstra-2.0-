@@ -51,11 +51,14 @@ The new algorithm uses recursive partitioning to reduce frontier size by a facto
 
 
 ### Basic Usage
-For quick examples of how to use both algorithms, see the demo script:
+For quick examples of how to use both algorithms, see the demo scripts:
 
 ```bash
 # Basic usage examples
 python examples/demo.py
+
+# Advanced features and comprehensive demonstrations
+python examples/advanced_demo.py
 ```
 
 or run the following as a quick example:
